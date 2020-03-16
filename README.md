@@ -1,2 +1,2 @@
 # Cake
-A project dedicted for THE cake.
+A project dedicated for THE cake.

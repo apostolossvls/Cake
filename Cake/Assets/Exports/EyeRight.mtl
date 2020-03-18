@@ -1,0 +1,12 @@
+newmtl TestTransparentEye
+Kd 1 1 1
+d 1
+
+newmtl CakePupil1
+Kd 0 0 0
+d 1
+
+newmtl EyeballInsideSkin
+Kd 0.5943396 0.367257 0.367257
+d 1
+

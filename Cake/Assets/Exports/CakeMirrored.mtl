@@ -1,0 +1,24 @@
+newmtl CakeMouth
+Kd 1 0 0
+d 1
+
+newmtl CakeTeeth
+Kd 1 1 1
+d 1
+
+newmtl CakeSkin
+Kd 1 0.7764706 0.6666667
+d 1
+
+newmtl CakeTop
+Kd 0.9058824 0.6196079 0.6862745
+d 1
+
+newmtl CakeLips
+Kd 1 0.7764706 0.6666667
+d 1
+
+newmtl CakePupil1
+Kd 0 0 0
+d 1
+

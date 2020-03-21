@@ -1,0 +1,32 @@
+newmtl CakeMouth
+Kd 0.3679245 0 0
+d 1
+
+newmtl CakeTeeth
+Kd 1 1 1
+d 1
+
+newmtl CakeSkin
+Kd 1 0.7764706 0.6666667
+d 1
+
+newmtl CakeTop
+Kd 0.7830189 0.4025899 0.5040376
+d 1
+
+newmtl CakeLips
+Kd 0.7075472 0.2236116 0.3211791
+d 1
+
+newmtl EyeballInsideSkin
+Kd 0.5943396 0.367257 0.367257
+d 1
+
+newmtl CakeTongue
+Kd 1 0.1933962 0.1933962
+d 1
+
+newmtl CakeCream
+Kd 0.7075472 0.2236116 0.3211791
+d 1
+

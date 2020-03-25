@@ -6,11 +6,14 @@ public class Movement : MonoBehaviour
 {
     Rigidbody rig;
     public float moveSpeed = 5f;
+    public float rotationSpeed = 5f;
     public float moveJumpForce = 10f;
     Vector3 movement;
     public Transform GroundCheckPivot;
+    public Transform cam;
 
     void Start(){
+        Cursor.visible = false;
         if (rig==null) rig = GetComponentInChildren<Rigidbody>(); 
     }
 
@@ -23,12 +26,18 @@ public class Movement : MonoBehaviour
     void FixedUpdate(){
         if (movement != Vector3.zero)
         {
+            Vector3 targetDirection = new Vector3(movement.x, 0f, movement.z);
+            targetDirection = cam.transform.TransformDirection(targetDirection);
+            targetDirection.y = 0.0f;
+            //Debug.DrawRay(transform.position, forward.normalized*10f, Color.black);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetDirection), Time.deltaTime * rotationSpeed);
             if (IsGrounded()){
                 rig.AddForce(transform.up * moveJumpForce, ForceMode.Impulse);
             }
-            else Debug.Log("On air");
-            rig.MovePosition(rig.position +  movement * moveSpeed * Time.fixedDeltaTime);
-
+            //else Debug.Log("On air");
+            //rig.MovePosition(rig.position + new Vector3(forward.x * movement.x, 0, forward.z * movement.z) * moveSpeed * Time.fixedDeltaTime);
+            rig.MovePosition(rig.position + targetDirection * moveSpeed * Time.fixedDeltaTime);
+            Debug.DrawRay(transform.position, new Vector3(cam.forward.x, 0, cam.forward.z).normalized * 10f, Color.blue);
         }
         //Debug.DrawRay(new Vector3(transform.position.x, transform.position.y-distToGround, transform.position.z), -transform.up, Color.red);
     }

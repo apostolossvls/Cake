@@ -25,7 +25,7 @@ public class Attack : MonoBehaviour
                 animator.ResetTrigger("Bite");
                 animator.SetTrigger("GroundBite");
             }
-            if (Mathf.Abs(rig.velocity.x) < 1) rig.AddForce(transform.forward * biteForwardForce, ForceMode.Impulse);
+            if (Mathf.Abs(rig.velocity.x) < 1 && Mathf.Abs(rig.velocity.z) < 1) rig.AddForce(transform.forward * biteForwardForce, ForceMode.Impulse);
         }
     }
 

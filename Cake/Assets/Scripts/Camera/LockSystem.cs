@@ -15,7 +15,7 @@ public class LockSystem : MonoBehaviour
     public Transform lockIcon;
     public float lockRadius = 20f;
     public float lockAngle =  15.0f;
-    public int mainPriority;
+    int mainPriority;
     ConstraintSource constraintSource;
 
     void Start()
@@ -32,7 +32,7 @@ public class LockSystem : MonoBehaviour
         }
 
         if (lockIcon && target!=player){
-            lockIcon.rotation = transform.rotation * Quaternion.Euler(-90f, 0f, 0f);
+            lockIcon.rotation = transform.rotation;
         }
     }
 
@@ -76,6 +76,7 @@ public class LockSystem : MonoBehaviour
                     //pc.translationOffset = Vector3.zero;
                     //pc.translationAtRest = Vector3.zero;
                 }
+                lockVcam.GetComponent<CinemachineVirtualCamera>().LookAt = t;
                 lockVcam.GetComponent<CinemachineVirtualCamera>().Priority = mainPriority + 1;
                 return;
             }

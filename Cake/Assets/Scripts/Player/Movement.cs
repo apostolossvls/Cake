@@ -13,10 +13,14 @@ public class Movement : MonoBehaviour
     public Transform groundCheckPivot;
     public Transform runningGroundCheckPivot;
     public Transform cam;
+    //jump
     public bool runningJump;
     public bool jumpPressed;
     bool onJump;
     bool onJumpUpwards;
+    //roll
+    bool rollPressed;
+    public float rollForce = 10f;
 
     void Start(){
         Cursor.visible = false;
@@ -26,6 +30,7 @@ public class Movement : MonoBehaviour
         jumpPressed = false;
         runningJump = false;
         onJumpUpwards = false;
+        rollPressed = false;
     }
 
     void Update()
@@ -37,6 +42,8 @@ public class Movement : MonoBehaviour
         }
 
         jumpPressed = Input.GetButton("Jump");
+
+        rollPressed = Input.GetButtonDown("Roll");
     }
 
     void FixedUpdate(){
@@ -48,6 +55,12 @@ public class Movement : MonoBehaviour
                 onJumpUpwards = true;
                 rig.AddForce(transform.up * jumpForce, ForceMode.Impulse);
             }
+        }
+
+        //ROLL
+        if (rollPressed){
+            rollPressed = false;
+            Roll();
         }
 
         //position
@@ -75,6 +88,12 @@ public class Movement : MonoBehaviour
             }
         }
         //Debug.DrawRay(new Vector3(transform.position.x, transform.position.y-distToGround, transform.position.z), -transform.up, Color.red);
+    }
+
+    void Roll(){
+        if (movement.x != 0){
+            rig.AddForce(new Vector3(rig.transform.right.x * Mathf.Sign(movement.x), rig.transform.right.y, rig.transform.right.z) * rollForce, ForceMode.Impulse);
+        }
     }
 
     public bool IsGrounded() {

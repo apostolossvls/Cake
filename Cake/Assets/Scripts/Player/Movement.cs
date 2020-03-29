@@ -13,6 +13,7 @@ public class Movement : MonoBehaviour
     public Transform groundCheckPivot;
     public Transform runningGroundCheckPivot;
     public Transform cam;
+    public Animator animator;
     //jump
     public bool runningJump;
     public bool jumpPressed;
@@ -92,7 +93,15 @@ public class Movement : MonoBehaviour
 
     void Roll(){
         if (movement.x != 0){
-            rig.AddForce(new Vector3(rig.transform.right.x * Mathf.Sign(movement.x), rig.transform.right.y, rig.transform.right.z) * rollForce, ForceMode.Impulse);
+            if (movement.x < 0){
+                animator.SetTrigger("RollLeft");
+                animator.ResetTrigger("RollRight");
+            }
+            else {
+                animator.ResetTrigger("RollRight");
+                animator.SetTrigger("RollLeft");
+            }
+            rig.AddForce((new Vector3(rig.transform.right.x * Mathf.Sign(movement.x), rig.transform.right.y, rig.transform.right.z) + rig.transform.up / 4) * rollForce, ForceMode.Impulse);
         }
     }
 

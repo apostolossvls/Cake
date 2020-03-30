@@ -64,7 +64,8 @@ public class Movement : MonoBehaviour
 
         //ROLL
         if (rollPressedRight || rollPressedLeft){
-            StopCoroutine(Roll(rollPressedRight));
+            if (animator.GetBool("RollRight") || animator.GetBool("RollLeft")) return;
+
             StartCoroutine(Roll(rollPressedRight));
             rollPressedRight = false;
             rollPressedLeft = false;
@@ -98,22 +99,20 @@ public class Movement : MonoBehaviour
     }
 
     IEnumerator Roll(bool onRight){
-        if (!onRight){
-            animator.ResetTrigger("RollRight");
-            animator.SetTrigger("RollLeft");
-        }
-        else {
-            animator.ResetTrigger("RollLeft");
-            animator.SetTrigger("RollRight");
-        }   
-        rig.AddForce((new Vector3(rig.transform.right.x * Mathf.Sign(movement.x), rig.transform.right.y, rig.transform.right.z) + rig.transform.up) * rollForce, ForceMode.Impulse);
         
-        //bool tempCanMove = canMove;
-        //canMove = false;
-        yield return new WaitForSeconds(0.99f);
-        //canMove = tempCanMove;
-        animator.ResetTrigger("RollRight");
-        animator.ResetTrigger("RollLeft");
+        animator.SetBool("RollRight", onRight);
+        animator.SetBool("RollLeft", !onRight);
+
+        //rig.AddForce((new Vector3(rig.transform.right.x * Mathf.Sign(movement.x), rig.transform.right.y, rig.transform.right.z) + rig.transform.up) * rollForce, ForceMode.Impulse);
+        rig.velocity = new Vector3 (0,  rig.velocity.y, 0);
+        rig.AddForce(rig.transform.right * rollForce * (onRight? 1 : -1), ForceMode.Impulse);
+        
+        canMove = false;
+        yield return new WaitForSeconds(0.75f);
+        canMove = true;
+
+        animator.SetBool("RollRight", false);
+        animator.SetBool("RollLeft", false);
         yield return null;
     }
 

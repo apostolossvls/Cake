@@ -6,6 +6,7 @@ public class Movement : MonoBehaviour
 {
     Rigidbody rig;
     public float moveSpeed = 5f;
+    public bool canMove;
     public float rotationSpeed = 5f;
     public float jumpForce = 5f;
     public float moveJumpForce = 10f;
@@ -20,31 +21,34 @@ public class Movement : MonoBehaviour
     bool onJump;
     bool onJumpUpwards;
     //roll
-    bool rollPressed;
+    bool rollPressedRight;
+    bool rollPressedLeft;
     public float rollForce = 10f;
 
     void Start(){
         Cursor.visible = false;
         if (rig==null) rig = GetComponentInChildren<Rigidbody>(); 
 
+        canMove = true;
         onJump = false;
         jumpPressed = false;
         runningJump = false;
         onJumpUpwards = false;
-        rollPressed = false;
+        rollPressedRight = false;
+        rollPressedLeft = false;
     }
 
     void Update()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.z = Input.GetAxisRaw("Vertical");
-        if (movement.x != 0 || movement.z !=0){
 
-        }
+        if (!canMove) movement = Vector3.zero;
 
         jumpPressed = Input.GetButton("Jump");
 
-        rollPressed = Input.GetButtonDown("Roll");
+        rollPressedRight = Input.GetButtonDown("RollRight");
+        rollPressedLeft = Input.GetButtonDown("RollLeft");
     }
 
     void FixedUpdate(){
@@ -59,9 +63,11 @@ public class Movement : MonoBehaviour
         }
 
         //ROLL
-        if (rollPressed){
-            rollPressed = false;
-            Roll();
+        if (rollPressedRight || rollPressedLeft){
+            StopCoroutine(Roll(rollPressedRight));
+            StartCoroutine(Roll(rollPressedRight));
+            rollPressedRight = false;
+            rollPressedLeft = false;
         }
 
         //position
@@ -91,18 +97,24 @@ public class Movement : MonoBehaviour
         //Debug.DrawRay(new Vector3(transform.position.x, transform.position.y-distToGround, transform.position.z), -transform.up, Color.red);
     }
 
-    void Roll(){
-        if (movement.x != 0){
-            if (movement.x < 0){
-                animator.SetTrigger("RollLeft");
-                animator.ResetTrigger("RollRight");
-            }
-            else {
-                animator.ResetTrigger("RollRight");
-                animator.SetTrigger("RollLeft");
-            }
-            rig.AddForce((new Vector3(rig.transform.right.x * Mathf.Sign(movement.x), rig.transform.right.y, rig.transform.right.z) + rig.transform.up / 4) * rollForce, ForceMode.Impulse);
+    IEnumerator Roll(bool onRight){
+        if (!onRight){
+            animator.ResetTrigger("RollRight");
+            animator.SetTrigger("RollLeft");
         }
+        else {
+            animator.ResetTrigger("RollLeft");
+            animator.SetTrigger("RollRight");
+        }   
+        rig.AddForce((new Vector3(rig.transform.right.x * Mathf.Sign(movement.x), rig.transform.right.y, rig.transform.right.z) + rig.transform.up) * rollForce, ForceMode.Impulse);
+        
+        //bool tempCanMove = canMove;
+        //canMove = false;
+        yield return new WaitForSeconds(0.99f);
+        //canMove = tempCanMove;
+        animator.ResetTrigger("RollRight");
+        animator.ResetTrigger("RollLeft");
+        yield return null;
     }
 
     public bool IsGrounded() {

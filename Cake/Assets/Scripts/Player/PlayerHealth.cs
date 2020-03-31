@@ -6,6 +6,7 @@ public class PlayerHealth : MonoBehaviour
 {
     public float maxHealth = 3f;
     public float health;
+    public bool alive = true;
     public Animator animator;
     public Transform eyeRight;
     public Transform eyeLeft;
@@ -17,6 +18,7 @@ public class PlayerHealth : MonoBehaviour
         health = maxHealth;
         hasEyeRight = true;
         hasEyeLeft = true;
+        alive = true;
         //Debug.Log("(2/3) * maxHealth: "+ (2/3) * maxHealth+ " , (1/3) * maxHealth: "+(1/3) * maxHealth);
     }
 
@@ -28,7 +30,7 @@ public class PlayerHealth : MonoBehaviour
         if (health <= (1f/3f) * maxHealth && hasEyeRight){
             SeperateEye(true, false);
         }
-        if (health<=0){
+        if (health<=0 && alive){
             BeginDeath();
         }
     }
@@ -58,15 +60,16 @@ public class PlayerHealth : MonoBehaviour
     }
 
     public void BeginDeath(){
+        alive = false;
         if (!animator){
             Die();
         }
         else {
-            animator.SetBool("Death", true);
+            animator.SetTrigger("Death");
         }
     }
 
     public void Die(){
-        Destroy(gameObject);
+        Debug.Log("Death completed");
     }
 }

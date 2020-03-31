@@ -43,8 +43,6 @@ public class Movement : MonoBehaviour
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.z = Input.GetAxisRaw("Vertical");
 
-        if (!canMove) movement = Vector3.zero;
-
         jumpPressed = Input.GetButton("Jump");
 
         rollPressedRight = Input.GetButtonDown("RollRight");
@@ -72,7 +70,7 @@ public class Movement : MonoBehaviour
         }
 
         //position
-        if (movement != Vector3.zero)
+        if (movement != Vector3.zero && canMove)
         {
             Vector3 targetDirection = new Vector3(movement.x, 0f, movement.z);
             targetDirection = cam.transform.TransformDirection(targetDirection);
@@ -100,6 +98,21 @@ public class Movement : MonoBehaviour
 
     IEnumerator Roll(bool onRight){
         
+        canMove = false;
+
+        if (LockSystem.onLock){
+            for (int i = 0; i < 10; i++)
+            {
+                //Vector3 targetDirection = new Vector3(movement.x, 0f, movement.z);
+                //targetDirection = cam.transform.TransformDirection(targetDirection);
+                //targetDirection.y = 0.0f;
+                Vector3 v = cam.transform.forward;
+                v.y = 0f;
+                v = v.normalized;
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(v), 0.4f);    
+                yield return new  WaitForSeconds(0.02f);
+            }
+        }
         animator.SetBool("RollRight", onRight);
         animator.SetBool("RollLeft", !onRight);
 
@@ -107,7 +120,6 @@ public class Movement : MonoBehaviour
         rig.velocity = new Vector3 (0,  rig.velocity.y, 0);
         rig.AddForce(rig.transform.right * rollForce * (onRight? 1 : -1), ForceMode.Impulse);
         
-        canMove = false;
         yield return new WaitForSeconds(0.75f);
         canMove = true;
 

@@ -6,7 +6,7 @@ using UnityEngine.Animations;
 
 public class LockSystem : MonoBehaviour
 {
-    public bool onLock;
+    public static bool onLock;
     public Transform player;
     public Transform target;
     public CinemachineVirtualCameraBase mainVcam;

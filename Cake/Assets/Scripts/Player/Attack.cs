@@ -8,6 +8,7 @@ public class Attack : MonoBehaviour
     public Rigidbody rig;
     public Transform normalBitePivot;
     public float biteForwardForce = 2f;
+    public float biteDamage = 1f;
 
     void Start()
     {
@@ -43,5 +44,9 @@ public class Attack : MonoBehaviour
             }
             return false;
         }
+    }
+
+    public void DealDamageTo(Health health){
+        health.health -= biteDamage;
     }
 }

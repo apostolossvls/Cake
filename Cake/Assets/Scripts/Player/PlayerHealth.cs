@@ -46,6 +46,7 @@ public class PlayerHealth : MonoBehaviour
             r.mass = 0.01f;
 
             eyeRight.GetComponent<Renderer>().enabled = false;
+            eyeRight.GetComponent<CakeEye>().isAttached = false;
         }
         if (left){
             hasEyeLeft = false;
@@ -56,6 +57,26 @@ public class PlayerHealth : MonoBehaviour
             r.mass = 0.01f;
             
             eyeLeft.GetComponent<Renderer>().enabled = false;
+            eyeLeft.GetComponent<CakeEye>().isAttached = false;
+        }
+    }
+
+    public void AttachEye (Transform eye, bool onRight){
+        if (onRight){
+            Renderer r = eyeRight.GetComponent<Renderer>();
+            if (r){
+                r.enabled = true;
+                Destroy(eye);
+            }
+            else Debug.LogWarning("No renderer found on "+eyeRight.name);
+        }
+        else {
+            Renderer r = eyeLeft.GetComponent<Renderer>();
+            if (r){
+                r.enabled = true;
+                Destroy(eye);
+            }
+            else Debug.LogWarning("No renderer found on "+eyeLeft.name);
         }
     }
 

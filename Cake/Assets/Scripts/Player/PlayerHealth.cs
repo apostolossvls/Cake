@@ -10,6 +10,10 @@ public class PlayerHealth : MonoBehaviour
     public Animator animator;
     public Transform eyeRight;
     public Transform eyeLeft;
+    public Transform eyeRightBloodPivot;
+    public Transform eyeLeftBloodPivot;
+    public GameObject bloodprefab1;
+    public GameObject bloodprefab2;
     bool hasEyeRight;
     bool hasEyeLeft;
     bool eyeDetach2_3;
@@ -87,6 +91,12 @@ public class PlayerHealth : MonoBehaviour
             Rigidbody r = g.AddComponent(typeof(Rigidbody)) as Rigidbody;
             r.mass = 0.01f;
 
+            GameObject b1 = GameObject.Instantiate(bloodprefab1.gameObject, eyeRightBloodPivot.position, eyeRightBloodPivot.rotation);
+            b1.transform.SetParent(eyeRightBloodPivot);
+            Destroy(b1, 5f);
+            GameObject b2 = GameObject.Instantiate(bloodprefab2.gameObject, g.transform.position, Quaternion.identity);
+            b2.transform.SetParent(g.transform);
+
             eyeRight.GetComponent<Renderer>().enabled = false;
         }
         if (left){
@@ -98,7 +108,13 @@ public class PlayerHealth : MonoBehaviour
             g.GetComponent<Collider>().isTrigger = false;
             Rigidbody r = g.AddComponent(typeof(Rigidbody)) as Rigidbody;
             r.mass = 0.01f;
-            
+
+            GameObject b1 = GameObject.Instantiate(bloodprefab1.gameObject, eyeLeftBloodPivot.position, eyeLeftBloodPivot.rotation);
+            b1.transform.SetParent(eyeLeftBloodPivot);
+            Destroy(b1, 5f);
+            GameObject b2 = GameObject.Instantiate(bloodprefab2.gameObject, g.transform.position, Quaternion.identity);
+            b2.transform.SetParent(g.transform);
+
             eyeLeft.GetComponent<Renderer>().enabled = false;
         }
     }

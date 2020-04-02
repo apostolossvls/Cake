@@ -96,11 +96,11 @@ public class Movement : MonoBehaviour
         //Debug.DrawRay(new Vector3(transform.position.x, transform.position.y-distToGround, transform.position.z), -transform.up, Color.red);
     }
 
-    IEnumerator Roll(bool onRight){
-        
+    IEnumerator Roll(bool onRight) {
+
         canMove = false;
 
-        if (LockSystem.onLock){
+        if (LockSystem.onLock) {
             for (int i = 0; i < 10; i++)
             {
                 //Vector3 targetDirection = new Vector3(movement.x, 0f, movement.z);
@@ -109,18 +109,26 @@ public class Movement : MonoBehaviour
                 Vector3 v = cam.transform.forward;
                 v.y = 0f;
                 v = v.normalized;
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(v), 0.4f);    
-                yield return new  WaitForSeconds(0.02f);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(v), 0.4f);
+                yield return new WaitForSeconds(0.02f);
             }
         }
         animator.SetBool("RollRight", onRight);
         animator.SetBool("RollLeft", !onRight);
 
+        AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+        //float testTimer = Time.time;
+        while ( ! (state.IsName("RollRight") || state.IsName("RollLeft"))){
+            state = animator.GetCurrentAnimatorStateInfo(0);
+            yield return null;
+        }
+        //Debug.Log("Delay before roll: " + (Time.time - testTimer));
+
         //rig.AddForce((new Vector3(rig.transform.right.x * Mathf.Sign(movement.x), rig.transform.right.y, rig.transform.right.z) + rig.transform.up) * rollForce, ForceMode.Impulse);
         rig.velocity = new Vector3 (0,  rig.velocity.y, 0);
         rig.AddForce(rig.transform.right * rollForce * (onRight? 1 : -1), ForceMode.Impulse);
         
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(0.6f);
         canMove = true;
 
         animator.SetBool("RollRight", false);

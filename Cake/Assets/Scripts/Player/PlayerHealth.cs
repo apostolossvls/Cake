@@ -64,7 +64,7 @@ public class PlayerHealth : MonoBehaviour
             }
         }
         else if (h1_3 && !eyeDetach1_3){
-            eyeDetach2_3 = true;
+            eyeDetach1_3 = true;
 
             if (hasEyeRight){
                 SeperateEye(true, false); //detach right

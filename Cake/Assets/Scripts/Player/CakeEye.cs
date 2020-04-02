@@ -7,11 +7,6 @@ public class CakeEye : MonoBehaviour
     public bool isRight;
     public bool isAttached = true;
 
-    void Start()
-    {
-        isAttached = true;
-    }
-
     void OnAttacked(MessageArgs msg){
         if (!isAttached){
             msg.recieved = true;

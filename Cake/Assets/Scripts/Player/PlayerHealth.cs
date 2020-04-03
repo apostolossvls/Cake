@@ -7,6 +7,8 @@ public class PlayerHealth : MonoBehaviour
     public float maxHealth = 3f;
     public float health;
     public bool alive = true;
+    public bool isInvulnerableWhenHit = true;
+    public bool isInvulnerable = false;
     public Animator animator;
     public Transform eyeRight;
     public Transform eyeLeft;
@@ -41,6 +43,24 @@ public class PlayerHealth : MonoBehaviour
         if (health<=0 && alive){
             BeginDeath();
         }
+    }
+
+    public void TakeDamage(float dmg, Transform sender = null)
+    {
+        health -= dmg;
+        if (isInvulnerableWhenHit)
+        {
+            StopCoroutine(BecomeInvulnerable());
+            StartCoroutine(BecomeInvulnerable());
+        }
+    }
+
+    public IEnumerator BecomeInvulnerable(float seconds=1f)
+    {
+        isInvulnerable = true;
+        yield return new WaitForSeconds(seconds);
+        isInvulnerable = false;
+        yield return null;
     }
 
     public void HealthEyeSeperation(){
@@ -94,8 +114,9 @@ public class PlayerHealth : MonoBehaviour
             GameObject b1 = GameObject.Instantiate(bloodprefab1.gameObject, eyeRightBloodPivot.position, eyeRightBloodPivot.rotation);
             b1.transform.SetParent(eyeRightBloodPivot);
             Destroy(b1, 5f);
-            GameObject b2 = GameObject.Instantiate(bloodprefab2.gameObject, g.transform.position, Quaternion.identity);
-            b2.transform.SetParent(g.transform);
+            GameObject b2 = GameObject.Instantiate(bloodprefab2.gameObject, g.transform.GetChild(0).position, Quaternion.identity);
+            b2.transform.SetParent(g.transform.GetChild(0));
+            b2.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
 
             eyeRight.GetComponent<Renderer>().enabled = false;
         }
@@ -112,8 +133,9 @@ public class PlayerHealth : MonoBehaviour
             GameObject b1 = GameObject.Instantiate(bloodprefab1.gameObject, eyeLeftBloodPivot.position, eyeLeftBloodPivot.rotation);
             b1.transform.SetParent(eyeLeftBloodPivot);
             Destroy(b1, 5f);
-            GameObject b2 = GameObject.Instantiate(bloodprefab2.gameObject, g.transform.position, Quaternion.identity);
-            b2.transform.SetParent(g.transform);
+            GameObject b2 = GameObject.Instantiate(bloodprefab2.gameObject, g.transform.GetChild(0).position, Quaternion.identity);
+            b2.transform.SetParent(g.transform.GetChild(0));
+            b2.transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
 
             eyeLeft.GetComponent<Renderer>().enabled = false;
         }

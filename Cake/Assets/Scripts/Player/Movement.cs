@@ -24,9 +24,10 @@ public class Movement : MonoBehaviour
     bool rollPressedRight;
     bool rollPressedLeft;
     public float rollForce = 10f;
+    public Texture2D cursorTexture;
 
     void Start(){
-        Cursor.visible = false;
+        Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
         if (rig==null) rig = GetComponentInChildren<Rigidbody>(); 
 
         canMove = true;

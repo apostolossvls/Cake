@@ -22,12 +22,12 @@ public class Health : MonoBehaviour
         }
     }
 
-    public void OnAttacked(MessageArgs msg){
+    public void OnAttacked(AttackMessageArgs msg){
         Debug.Log(gameObject.name+ ": Got attacked");
         msg.recieved = true;
         Attack attack = msg.sender.GetComponent<Attack>();
         if (attack){
-            attack.DealDamageTo(this);
+            attack.DealDamageTo(this, msg.type);
         }
     }
 

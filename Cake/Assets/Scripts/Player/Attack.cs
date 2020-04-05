@@ -9,6 +9,8 @@ public class Attack : MonoBehaviour
     public Transform normalBitePivot;
     public float biteForwardForce = 2f;
     public float biteDamage = 1f;
+    public float tongueSwingDamage = 1f;
+    public enum AttackType {Bite=0, TongueSwing=1}
     public GameObject testOnject;
     public LayerMask layers;
     float mZCoord;
@@ -84,13 +86,17 @@ public class Attack : MonoBehaviour
 
             //angleA = Mathf.Clamp((angleA - 90f), -1f, 1f);
             //animator.SetTrigger("TongueSwing");
+
             mZCoord = Camera.main.WorldToScreenPoint(transform.position).z + 4f;
             Vector3 finalPos = GetMouseWorldPos();
             Vector3 finalXY;
+
             Vector3 dif = finalPos - transform.position;
             Vector3 localDif = transform.InverseTransformVector(dif);
+
             float fx = Vector3.Angle(new Vector3(localDif.x, 0, localDif.z), transform.forward);
             float fy = Vector3.Angle(new Vector3(0, localDif.y, localDif.z), transform.forward);
+
             fx = localDif.x >= 0 ? fx : -fx;
             fy = localDif.y >= 0 ? fy : -fy;
 
@@ -100,7 +106,9 @@ public class Attack : MonoBehaviour
             animator.SetFloat("TongueX", finalXY.x);
             animator.SetFloat("TongueY", finalXY.y);
             animator.SetTrigger("TongueSwing");
-            Destroy(GameObject.Instantiate(testOnject, finalPos, Quaternion.identity), 1f);
+
+            //Destroy(GameObject.Instantiate(testOnject, finalPos, Quaternion.identity), 1f);
+
             //Debug.Log("Angle: " + turnAngle +" | "+angleA+"/"+Vector3.Angle(dif, transform.forward)+" , "+angleC);
             //Debug.Log(fx + " , " + fy+" | "+localDif);
             //Debug.Log("Angle x: " + finalXY.x +" | "+ ((euler.x - 180) / 90f) +" | "+ euler.x+ " , angle y: "+ finalXY.y);
@@ -123,8 +131,15 @@ public class Attack : MonoBehaviour
         }
     }
 
-    public void DealDamageTo(Health health){
-        health.health -= biteDamage;
+    public void DealDamageTo(Health health, AttackType attackType){
+        if (attackType == AttackType.Bite)
+        {
+            health.health -= biteDamage;
+        }
+        else if (attackType == AttackType.TongueSwing)
+        {
+            health.health -= tongueSwingDamage;
+        }
     }
 
     Vector3 GetMouseWorldPos()

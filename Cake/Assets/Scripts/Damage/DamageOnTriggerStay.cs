@@ -6,11 +6,12 @@ using System.Linq;
 public class DamageOnTriggerStay : MonoBehaviour
 {
     public float damage=1f;
-    public float TicksPerSecond=1f;
+    public float TickSeconds=1f;
     public List<Transform> targets;
     List<float> tickTimer;
     public string[] tags;
     public string[] layers;
+    public bool searchHierarchy = true;
 
     void Start()
     {
@@ -19,6 +20,10 @@ public class DamageOnTriggerStay : MonoBehaviour
     }
 
     void Update(){
+        for (int i = 0; i < tickTimer.Count; i++)
+        {
+            tickTimer[i] += Time.deltaTime;
+        }
         List<int> indexes = new List<int>{};
         for (int i = 0; i < targets.Count; i++)
         {
@@ -34,24 +39,25 @@ public class DamageOnTriggerStay : MonoBehaviour
     }
 
     void DealDamage(Transform t){
-        PlayerHealth h = t.gameObject.GetComponent<PlayerHealth>();
+        PlayerHealth h = null;
+        if (searchHierarchy) h = t.gameObject.GetComponentInParent<PlayerHealth>();
+        else h = t.gameObject.GetComponent<PlayerHealth>();
         if (h){
-            h.OnDamage(damage);
+            h.TakeDamage(damage, transform);
         }
     }
 
     void OnTriggerStay(Collider other)
     {
         if (this.enabled){
-            if (TicksPerSecond!=0){
+            if (TickSeconds != 0){
                 if ((tags.Contains(other.transform.tag) || layers.Contains(LayerMask.LayerToName(other.gameObject.layer))) && OnArray(other.transform)==-1){
                     targets.Add(other.transform);
-                    tickTimer.Add(TicksPerSecond);
+                    tickTimer.Add(TickSeconds);
                 }
                 for (int i = 0; i < tickTimer.Count; i++)
                 {
-                    tickTimer[i] += Time.deltaTime;
-                    if (tickTimer[i]>=TicksPerSecond){
+                    if (tickTimer[i]>=TickSeconds){
                         tickTimer[i]=0;
                         DealDamage(targets[i]);
                     }

@@ -8,9 +8,12 @@ public class DamageOnCollisionEnter : MonoBehaviour
     public float damage=1f;
     public string[] tags;
     public string[] layers;
+    public bool searchHierarchy = true;
 
     void DealDamage(Transform t){
-        PlayerHealth h = t.gameObject.GetComponentInParent<PlayerHealth>();
+        PlayerHealth h = null;
+        if (searchHierarchy) h = t.gameObject.GetComponentInParent<PlayerHealth>();
+        else h = t.gameObject.GetComponent<PlayerHealth>();
         if (h){
             h.TakeDamage(damage, transform);
         }

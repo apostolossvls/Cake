@@ -7,7 +7,7 @@ public class CakeEye : MonoBehaviour
     public bool isRight;
     public bool isAttached = true;
 
-    void OnAttacked(MessageArgs msg){
+    void OnAttacked(AttackMessageArgs msg){
         if (!isAttached){
             msg.recieved = true;
             PlayerHealth playerHealth = msg.sender.GetComponentInParent<PlayerHealth>();

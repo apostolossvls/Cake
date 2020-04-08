@@ -11,9 +11,13 @@ public class PlayerAttackCollider : MonoBehaviour
     public Attack.AttackType attackType = 0; //0=bite, 1=tongue swing
 
     void OnTriggerEnter(Collider other){
-        if (targetTags.Contains(other.tag)){
-            //Debug.Log("Send attack message to: "+other.name);
-            other.SendMessage("OnAttacked", new AttackMessageArgs(attack.transform, attackType), SendMessageOptions.DontRequireReceiver);
+        if (gameObject.activeInHierarchy && this.enabled)
+        {
+            if (targetTags.Contains(other.tag))
+            {
+                //Debug.Log("Send attack message to: "+other.name);
+                other.SendMessage("OnAttacked", new AttackMessageArgs(attack.transform, attackType), SendMessageOptions.DontRequireReceiver);
+            }
         }
     }
 }

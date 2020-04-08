@@ -76,6 +76,7 @@ public class Movement : MonoBehaviour
             Vector3 targetDirection = new Vector3(movement.x, 0f, movement.z);
             targetDirection = cam.transform.TransformDirection(targetDirection);
             targetDirection.y = 0.0f;
+            //Debug.Log("Angle: " + (Vector3.Angle(transform.rotation.eulerAngles, targetDirection)));
             //Debug.DrawRay(transform.position, forward.normalized*10f, Color.black);
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetDirection), Time.deltaTime * rotationSpeed);
             if (IsGrounded()){
@@ -101,8 +102,11 @@ public class Movement : MonoBehaviour
 
         canMove = false;
 
+        float singedAngleCam = Vector3.SignedAngle(transform.forward, cam.transform.forward, transform.up);
+        bool singedAngleCamBool = false;
+
         if (LockSystem.onLock) {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 20; i++)
             {
                 //Vector3 targetDirection = new Vector3(movement.x, 0f, movement.z);
                 //targetDirection = cam.transform.TransformDirection(targetDirection);
@@ -110,9 +114,19 @@ public class Movement : MonoBehaviour
                 Vector3 v = cam.transform.forward;
                 v.y = 0f;
                 v = v.normalized;
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(v), 0.4f);
-                yield return new WaitForSeconds(0.02f);
+                singedAngleCam = Vector3.SignedAngle(transform.forward, cam.transform.forward, transform.up);
+                if (Mathf.Abs(singedAngleCam) > 110f)
+                {
+                    singedAngleCamBool = true;
+                    onRight = !onRight;
+                    v *= -1f;
+                }
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(v), 0.2f);
+                yield return new WaitForSeconds(0.003f);
             }
+        }
+        if (singedAngleCamBool){
+            onRight = !onRight;
         }
         animator.SetBool("RollRight", onRight);
         animator.SetBool("RollLeft", !onRight);
@@ -124,6 +138,9 @@ public class Movement : MonoBehaviour
             yield return null;
         }
         //Debug.Log("Delay before roll: " + (Time.time - testTimer));
+
+        
+        
 
         //rig.AddForce((new Vector3(rig.transform.right.x * Mathf.Sign(movement.x), rig.transform.right.y, rig.transform.right.z) + rig.transform.up) * rollForce, ForceMode.Impulse);
         rig.velocity = new Vector3 (0,  rig.velocity.y, 0);

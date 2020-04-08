@@ -1,0 +1,12 @@
+newmtl CakeTop
+Kd 0.7830189 0.4025899 0.5040376
+d 1
+
+newmtl CakeSkin
+Kd 1 0.7764706 0.6666667
+d 1
+
+newmtl CakeCream
+Kd 0.7075472 0.2236116 0.3211791
+d 1
+

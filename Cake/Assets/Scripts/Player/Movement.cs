@@ -43,6 +43,7 @@ public class Movement : MonoBehaviour
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.z = Input.GetAxisRaw("Vertical");
+        movement = movement.normalized;
 
         jumpPressed = Input.GetButton("Jump");
 
